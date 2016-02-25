@@ -1,8 +1,20 @@
 from flask import Flask, render_template, redirect, url_for, request, session, flash
+from flask.ext.bcrypt import Bcrypt
+from flask.ext.sqlalchemy import SQLAlchemy
 from functools import wraps
-app = Flask(__name__)
 
-app.secret_key = "watagwanista"
+# create the application object
+app = Flask(__name__)
+bcrypt = Bcrypt(app)
+
+# config
+app.config.from_object('config.BaseConfig')
+
+# create the sqlalchemy object
+db = SQLAlchemy(app)
+
+# import db schema
+from models import *
 
 def login_required(f):
     """Login required decorator"""
@@ -17,8 +29,13 @@ def login_required(f):
 
 @app.route('/')
 @login_required  # require login
-def home():
+def index():
     return render_template("index.html")
+
+@app.route('/home')
+@login_required  # require login
+def home():
+    return render_template("home.html")
 
 @app.route('/welcome')
 def welcome():
@@ -28,12 +45,20 @@ def welcome():
 def login():
     error = None
     if request.method == 'POST':
-        if request.form['username'] != 'admin' or request.form['password'] != 'admin':
-            error = 'Invalid credentials. Please try again.'
-        else:
+        staff_object = Staff.query.filter_by(email=request.form['username'])\
+                    .first()
+        if staff_object.password == request.form['password']:
             session["logged_in"] = True
             flash('You were just logged in!')
-            return redirect(url_for('home'))
+            
+            if staff_object.role == "user":
+                staff_assets = staff_object.assets.all()
+                return render_template('home.html',
+                                        staff=staff_object,
+                                        assets=staff_assets)
+
+
+        error = 'Invalid credentials. Please try again.'
     return render_template('login.html', error=error)
 
 @app.route('/logout')
@@ -45,4 +70,4 @@ def logout():
 
 # start the server with the 'run()' method
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()

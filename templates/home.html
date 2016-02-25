@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Welcome {{ staff.firstname }} {{ staff.lastname }}</h1>
+    <br/>
+
+    <div>
+    {% for asset in assets %}
+        <table>
+            <tr>
+                <td>{{ asset.name }}</td>
+                <td>{{ asset.serialno }}</td>
+                <td>{{ asset.assetno }}</td>
+                <td>{{ asset.reclaim_on }}</td>
+                <td>{{ asset.is_missing }}</td>
+            </tr>>
+        </table>
+    {% endfor %}
+    </div>
+    <div>
+    <p>Click <a href="/">here</a> No hurries please.</p>
+    </div>
+</div>
+
+{% endblock %}
