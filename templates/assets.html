@@ -102,7 +102,7 @@
                     <li>
                         <a href="/home"><i class="fa fa-fw fa-dashboard"></i> My Stuff</a>
                     </li>
-                    {% if staff.role != "user" %}
+                    {% if session['role'] != "user" %}
                     <li class="active">
                         <a href="#"><i class="fa fa-fw fa-bar-chart-o"></i> Inventory</a>
                     </li>
@@ -113,7 +113,7 @@
                         <a href="bootstrap-elements.html"><i class="fa fa-fw fa-desktop"></i> Reports</a>
                     </li>
                     {% endif %}
-                    {% if staff.role == "user" %}
+                    {% if session['role'] == "user" %}
                         <li>
                             <a href="/staff"><i class="fa fa-fw fa-table"></i> Staff</a>
                         </li>
@@ -195,86 +195,86 @@
                                                     <td>{{ asset.assetno }}</td>
                                                     <td>{{ asset.reclaim_on }}</td>
                                                     <td>{{ staff[count] }}</td>
-                                                        <td>
-                                                        {% if asset.Location == "store"}
-                                                            <!-- Button trigger modal for assigning asssets -->
-                                                            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-                                                              Assign to User
-                                                            </button>
+                                                    <td>
+                                                    {% if asset.Location == "store" %}
+                                                        <!-- Button trigger modal for assigning asssets -->
+                                                        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                                                          Assign to User
+                                                        </button>
 
-                                                            <!-- Modal -->
-                                                            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                                              <div class="modal-dialog" role="document">
-                                                                <div class="modal-content">
-                                                                  <div class="modal-header">
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                                    <h4 class="modal-title" id="myModalLabel">Report Form</h4>
-                                                                  </div>
-                                                                  <div class="modal-body">
-                                                                    <div class="form-bottom">
-                                                                        <form role="form" action="/assign_asset" method="post" class="login-form">
-                                                                            <div class="form-group">
-                                                                                <label class="sr-only" for="form-username">Name</label>
-                                                                                <input type="text" name="asset" value="{{ asset.name }}" class="form-username form-control" id="form-username">
-                                                                            </div>
-                                                                            <div class="form-group">
-                                                                                <select name="staff" >
-                                                                                    {% for astaff in staff %}
-                                                                                    <option value="astaff">astaff</option>
-                                                                                    {% endfor %}
-                                                                                </select>
-                                                                            </div>
-                                                                            <button type="submit" class="btn">Assign</button>
-                                                                        </form>
-                                                                    </div>
-                                                                  </div>
-                                                                  <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                                  </div>
+                                                        <!-- Modal -->
+                                                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                                          <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                              <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                <h4 class="modal-title" id="myModalLabel">Report Form</h4>
+                                                              </div>
+                                                              <div class="modal-body">
+                                                                <div class="form-bottom">
+                                                                    <form role="form" action="/assign_asset" method="post" class="login-form">
+                                                                        <div class="form-group">
+                                                                            <label class="sr-only" for="form-username">Name</label>
+                                                                            <input type="text" name="asset" value="{{ asset.name }}" class="form-username form-control" id="form-username">
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <select name="staff" >
+                                                                                {% for astaff in staff %}
+                                                                                <option value="astaff">astaff</option>
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                        </div>
+                                                                        <button type="submit" class="btn">Assign</button>
+                                                                    </form>
                                                                 </div>
                                                               </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                        {% else %}
-                                                            <!-- Button trigger modal for reclaim asssets -->
-                                                            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-                                                              Reclaim Asset
-                                                            </button>
-
-                                                            <!-- Modal -->
-                                                            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                                              <div class="modal-dialog" role="document">
-                                                                <div class="modal-content">
-                                                                  <div class="modal-header">
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                                    <h4 class="modal-title" id="myModalLabel">Reclaim Form</h4>
-                                                                  </div>
-                                                                  <div class="modal-body">
-                                                                    <div class="form-bottom">
-                                                                        <form role="form" action="/reclaim_asset" method="post" class="login-form">
-                                                                            <div class="form-group">
-                                                                                <label class="sr-only" for="form-username">Name</label>
-                                                                                <input type="text" name="name" value="{{ asset.name }}" class="form-username form-control" id="form-username">
-                                                                            </div>
-                                                                            <div class="form-group">
-                                                                                <select name="staff" >
-                                                                                    {% for astaff in staff %}
-                                                                                    <option value="astaff">astaff</option>
-                                                                                    {% endfor %}
-                                                                                </select>
-                                                                            </div>
-                                                                            <button type="submit" class="btn">Assign</button>
-                                                                        </form>
-                                                                    </div>
-                                                                  </div>
-                                                                  <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                                  </div>
-                                                                </div>
+                                                              <div class="modal-footer">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                               </div>
                                                             </div>
-                                                        </td>
+                                                          </div>
+                                                        </div>
+                                                    </td>
+                                                    {% else %}
+                                                    <td>
+                                                        <!-- Button trigger modal for reclaim asssets -->
+                                                        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                                                          Reclaim Asset
+                                                        </button>
+
+                                                        <!-- Modal -->
+                                                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                                          <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                              <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                <h4 class="modal-title" id="myModalLabel">Reclaim Form</h4>
+                                                              </div>
+                                                              <div class="modal-body">
+                                                                <div class="form-bottom">
+                                                                    <form role="form" action="/reclaim_asset" method="post" class="login-form">
+                                                                        <div class="form-group">
+                                                                            <label class="sr-only" for="form-username">Name</label>
+                                                                            <input type="text" name="name" value="{{ asset.name }}" class="form-username form-control" id="form-username">
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <select name="staff" >
+                                                                                {% for astaff in staff %}
+                                                                                <option value="astaff">astaff</option>
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                        </div>
+                                                                        <button type="submit" class="btn">Assign</button>
+                                                                    </form>
+                                                                </div>
+                                                              </div>
+                                                              <div class="modal-footer">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                    </td>
                                                     {% endif %}
                                                 </tr>
                                             {% set count = count + 1 %}

@@ -102,7 +102,7 @@
                     <li class="active">
                         <a href="#"><i class="fa fa-fw fa-dashboard"></i> My Stuff</a>
                     </li>
-                    {% if staff.role != "user" %}
+                    {% if session['role'] != "user" %}
                         <li>
                             <a href="/assets"><i class="fa fa-fw fa-bar-chart-o"></i> Inventory</a>
                         </li>
@@ -113,7 +113,7 @@
                             <a href="bootstrap-elements.html"><i class="fa fa-fw fa-desktop"></i> Reports</a>
                         </li>
                     {% endif %}
-                    {% if staff.role == "user" %}
+                    {% if session['role'] == "user" %}
                         <li>
                             <a href="/staff"><i class="fa fa-fw fa-table"></i> Staff</a>
                         </li>

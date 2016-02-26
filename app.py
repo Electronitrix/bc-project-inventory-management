@@ -51,6 +51,7 @@ def login():
             session["logged_in"] = True
             session["username"] = staff_object.firstname.capitalize() + \
                 " " + staff_object.lastname.capitalize()
+            session["role"]  = staff_object.role
             
             staff_assets = staff_object.assets.all()
             return render_template('home.html',
@@ -68,7 +69,7 @@ def assets():
     for asset in all_assets:
         astaff = Staff.query.filter_by(id=asset.staff_id).first()
         staff_name = astaff.firstname.capitalize() + " " + astaff.lastname.capitalize()
-        posessor.append(staff_name)
+        staff.append(staff_name)
 
     return render_template('assets.html',
                             staff=staff,
@@ -79,10 +80,10 @@ def assets():
 def assign_asset():
     """Assign asset to a staff"""
     error = None
-    if request.method = 'POST':
+    if request.method == 'POST':
         asset_object = Asset.query.filter_by(name=request.form['asset']) \
                         .first()
-        staff_firstname = request.form['staff'].split()[].lower()  # get firstname and make lowercase
+        staff_firstname = request.form['staff'].split()[0].lower()  # get firstname and make lowercase
         staff_object = User.query.filter_by(firstname=request.form['name']) \
                         .first()
         asset_object.author = staff_object
@@ -117,9 +118,9 @@ def lost():
     lost_assets = Asset.query.filter_by(is_missing=True).all()
     
     return render_template('assets.html',
-                            assets=all_assets)
+                            assets=lost_assets)
 
-@app.route('create_asset', methods=['GET', 'POST'])
+@app.route('/create_asset', methods=['GET', 'POST'])
 @login_required  # require login
 def create_asset():
     """Update database with new asset record"""
@@ -134,7 +135,7 @@ def create_asset():
 
         return redirect(url_for('assets'))
 
-@app.route('mark_as_found', methods=['GET', 'POST'])
+@app.route('/mark_as_found', methods=['GET', 'POST'])
 @login_required  # require login
 def mark_as_found():
     """Updates is_missing field on database to False"""
@@ -148,7 +149,23 @@ def mark_as_found():
             db.session.commit()
         return redirect(url_for('lost'))
 
-@app.route('report_found', methods=['GET', 'POST'])
+@app.route('/reports')
+@login_required
+def reports():
+    """
+    Displays missing and lost-and-found assets report filed by user
+
+    Returns:
+    assets_missing -- collection of reported missing assets
+    assets_found -- collection of reported found assets
+    """
+    assets_missing = MissingReport.query.all()
+    assets_found = FoundReport.query.all()
+    return render_template("reports",
+                            assets_missing=assets_missing,
+                            assets_found=assets_found)
+
+@app.route('/report_found', methods=['GET', 'POST'])
 @login_required # require login
 def report_found():
     """
@@ -156,7 +173,7 @@ def report_found():
     """
     error = None
     if request.method == 'POST':
-        asset_object = Asset.query.filter_by(id=request.form['id']) \
+        asset_object = Asset.query.filter_by(id=request.form['id']). \
                         first()
         new_found = FoundReport(name=asset_object.name, 
                                 serialno=asset_object.serialno, 
@@ -166,15 +183,15 @@ def report_found():
 
         return redirect(url_for('home'))
 
-@app.route('report_missing', methods=['GET', 'POST'])
-@login_required # require login
+@app.route('/report_missing', methods=['GET', 'POST'])
+@login_required  # require login
 def report_missing():
     """
     Logs users reports that an asset is missing to missing_reports table
     """
     error = None
     if request.method == 'POST':
-        asset_object = Asset.query.filter_by(id=request.form['id']) \
+        asset_object = Asset.query.filter_by(id=request.form['id']). \
                         first()
         new_missing = FoundReport(name=asset_object.name, 
                                 serialno=asset_object.serialno, 
@@ -184,9 +201,15 @@ def report_missing():
 
         return redirect(url_for('home'))
 
-@app.route
+@app.route('/staff')
+@login_required  # require login
+def staff():
+    all_staff = Staff.query.all()
+    render_template("staff.html",
+                    staff=all_staff)
 
-@app.route('change_role', methods=['GET', 'POST'])
+
+@app.route('/change_role', methods=['GET', 'POST'])
 @login_required  # require login
 def change_role():
     """

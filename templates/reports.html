@@ -186,7 +186,7 @@
                                         </thead>
                                         <tbody>
                                             {% set count = 0 %}
-                                            {% for asset in assets %}
+                                            {% for asset in assets_missing %}
                                                 <tr>
                                                     <td>{{ count }}</td>
                                                     <td>{{ asset.name }}</td>
@@ -265,7 +265,7 @@
                                         </thead>
                                         <tbody>
                                             {% set count = 0 %}
-                                            {% for asset in assets %}
+                                            {% for asset in assets_found %}
                                                 <tr>
                                                     <td>{{ count }}</td>
                                                     <td>{{ asset.name }}</td>
