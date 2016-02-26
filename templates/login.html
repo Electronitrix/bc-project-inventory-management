@@ -67,6 +67,9 @@
                                     <button type="submit" class="btn">Sign in!</button>
                                 </form>
                             </div>
+                            {% if error %}
+                              <p class="error"><strong>Error:</strong> {{ error }}
+                            {% endif %}
                         </div>
                     </div>
                 </div>

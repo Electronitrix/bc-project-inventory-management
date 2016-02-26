@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Andela Inventory Manager</title>
+    <title>View Assets</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="static/css/bootstrap.min.css" rel="stylesheet">
@@ -99,19 +99,19 @@
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
-                    <li class="active">
-                        <a href="#"><i class="fa fa-fw fa-dashboard"></i> My Stuff</a>
+                    <li>
+                        <a href="/home"><i class="fa fa-fw fa-dashboard"></i> My Stuff</a>
                     </li>
                     {% if staff.role != "user" %}
-                        <li>
-                            <a href="/assets"><i class="fa fa-fw fa-bar-chart-o"></i> Inventory</a>
-                        </li>
-                        <li>
-                            <a href="/lost"><i class="fa fa-fw fa-edit"></i> Lost</a>
-                        </li>
-                        <li>
-                            <a href="bootstrap-elements.html"><i class="fa fa-fw fa-desktop"></i> Reports</a>
-                        </li>
+                    <li class="active">
+                        <a href="#"><i class="fa fa-fw fa-bar-chart-o"></i> Inventory</a>
+                    </li>
+                    <li>
+                        <a href="/lost"><i class="fa fa-fw fa-edit"></i> Lost</a>
+                    </li>
+                    <li>
+                        <a href="bootstrap-elements.html"><i class="fa fa-fw fa-desktop"></i> Reports</a>
+                    </li>
                     {% endif %}
                     {% if staff.role == "user" %}
                         <li>
@@ -151,11 +151,11 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            Dashboard
+                            Assets
                         </h1>
                         <ol class="breadcrumb">
                             <li class="active">
-                                <i class="fa fa-dashboard"></i> My Stuff
+                                <i class="fa fa-dashboard"></i> Assets
                             </li>
                         </ol>
                     </div>
@@ -169,7 +169,7 @@
                    <div class="col-lg-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-money fa-fw"></i> All Assigned Assets</h3>
+                                <h3 class="panel-title"><i class="fa fa-money fa-fw"></i> All Assets</h3>
                             </div>
                             <div class="panel-body">
                                 <div class="table-responsive">
@@ -181,7 +181,8 @@
                                                 <th>Serial Number</th>
                                                 <th>Asset Number</th>
                                                 <th>Reclaim Date</th>
-                                                <th>Remarks</th>
+                                                <th>Location</th>
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -193,11 +194,12 @@
                                                     <td>{{ asset.serialno }}</td>
                                                     <td>{{ asset.assetno }}</td>
                                                     <td>{{ asset.reclaim_on }}</td>
-                                                    {% if asset.is_missing %}
+                                                    <td>{{ staff[count] }}</td>
                                                         <td>
-                                                            <!-- Button trigger modal -->
+                                                        {% if asset.Location == "store"}
+                                                            <!-- Button trigger modal for assigning asssets -->
                                                             <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-                                                              Report Found
+                                                              Assign to User
                                                             </button>
 
                                                             <!-- Modal -->
@@ -210,16 +212,19 @@
                                                                   </div>
                                                                   <div class="modal-body">
                                                                     <div class="form-bottom">
-                                                                        <form role="form" action="/report_found" method="post" class="login-form">
+                                                                        <form role="form" action="/assign_asset" method="post" class="login-form">
                                                                             <div class="form-group">
                                                                                 <label class="sr-only" for="form-username">Name</label>
-                                                                                <input type="text" name="name" value="{{ asset.name }}" class="form-username form-control" id="form-username">
+                                                                                <input type="text" name="asset" value="{{ asset.name }}" class="form-username form-control" id="form-username">
                                                                             </div>
                                                                             <div class="form-group">
-                                                                                <label class="sr-only" for="form-password">Asset ID</label>
-                                                                                <input type="text" name="id" value="{{ asset.id }}" class="form-password form-control" id="form-password">
+                                                                                <select name="staff" >
+                                                                                    {% for astaff in staff %}
+                                                                                    <option value="astaff">astaff</option>
+                                                                                    {% endfor %}
+                                                                                </select>
                                                                             </div>
-                                                                            <button type="submit" class="btn">Submit Report</button>
+                                                                            <button type="submit" class="btn">Assign</button>
                                                                         </form>
                                                                     </div>
                                                                   </div>
@@ -229,13 +234,12 @@
                                                                 </div>
                                                               </div>
                                                             </div>
-                                                            
                                                         </td>
-                                                    {% else %}
                                                         <td>
-                                                            <!-- Button trigger modal -->
+                                                        {% else %}
+                                                            <!-- Button trigger modal for reclaim asssets -->
                                                             <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-                                                              Report Missing
+                                                              Reclaim Asset
                                                             </button>
 
                                                             <!-- Modal -->
@@ -244,20 +248,23 @@
                                                                 <div class="modal-content">
                                                                   <div class="modal-header">
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                                    <h4 class="modal-title" id="myModalLabel">Report Form</h4>
+                                                                    <h4 class="modal-title" id="myModalLabel">Reclaim Form</h4>
                                                                   </div>
                                                                   <div class="modal-body">
                                                                     <div class="form-bottom">
-                                                                        <form role="form" action="/report_missing" method="post" class="login-form">
+                                                                        <form role="form" action="/reclaim_asset" method="post" class="login-form">
                                                                             <div class="form-group">
                                                                                 <label class="sr-only" for="form-username">Name</label>
-                                                                                <input type="text" name="name" value="{{ asset.name }}"" class="form-username form-control" id="form-username">"
+                                                                                <input type="text" name="name" value="{{ asset.name }}" class="form-username form-control" id="form-username">
                                                                             </div>
                                                                             <div class="form-group">
-                                                                                <label class="sr-only" for="form-password">Asset ID</label>
-                                                                                <input type="text" name="id" value="{{ asset.id }}" class="form-password form-control" id="form-password">
+                                                                                <select name="staff" >
+                                                                                    {% for astaff in staff %}
+                                                                                    <option value="astaff">astaff</option>
+                                                                                    {% endfor %}
+                                                                                </select>
                                                                             </div>
-                                                                            <button type="submit" class="btn">Submit Report</button>
+                                                                            <button type="submit" class="btn">Assign</button>
                                                                         </form>
                                                                     </div>
                                                                   </div>
@@ -275,6 +282,45 @@
                                         </tbody>
                                     </table>
                                 </div>
+                            </div>
+
+                            <!-- Button trigger modal for Add asssets -->
+                            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                              Add Asset
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                              <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Add Asset Form</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                    <div class="form-bottom">
+                                        <form role="form" action="/create_asset" method="post" class="login-form">
+                                            <div class="form-group">
+                                                <label class="sr-only" for="form-username">Asset Name</label>
+                                                <input type="text" name="name" placeholder="Enter name of Asset..." class="form-username form-control" id="form-username">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="sr-only" for="form-username">Serial Number</label>
+                                                <input type="text" name="serial_no" placeholder="Enter Serial Number" class="form-username form-control" id="form-username">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="sr-only" for="form-username">Asset Number</label>
+                                                <input type="text" name="asset_no" placeholder="Enter Serial Number" class="form-username form-control" id="form-username">
+                                            </div>
+                                            <button type="submit" class="btn">Create Asset Record</button>
+                                        </form>
+                                    </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                         </div>
                     </div>
