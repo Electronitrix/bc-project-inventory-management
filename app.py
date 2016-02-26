@@ -117,7 +117,7 @@ def lost():
     """
     lost_assets = Asset.query.filter_by(is_missing=True).all()
     
-    return render_template('assets.html',
+    return render_template('lost.html',
                             assets=lost_assets)
 
 @app.route('/create_asset', methods=['GET', 'POST'])
@@ -161,7 +161,7 @@ def reports():
     """
     assets_missing = MissingReport.query.all()
     assets_found = FoundReport.query.all()
-    return render_template("reports",
+    return render_template("reports.html",
                             assets_missing=assets_missing,
                             assets_found=assets_found)
 
