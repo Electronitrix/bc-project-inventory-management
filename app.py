@@ -30,16 +30,12 @@ def login_required(f):
 @app.route('/')
 @login_required  # require login
 def index():
-    return render_template("index.html")
+    return render_template("login.html")
 
 @app.route('/home')
 @login_required  # require login
 def home():
-    return render_template("home.html")
-
-@app.route('/welcome')
-def welcome():
-    return render_template("welcome.html")
+    return redirect(url_for("index"))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -51,7 +47,7 @@ def login():
             session["logged_in"] = True
             session["username"] = staff_object.firstname.capitalize() + \
                 " " + staff_object.lastname.capitalize()
-            session["role"]  = staff_object.role
+            session["role"] = staff_object.role
             
             staff_assets = staff_object.assets.all()
             return render_template('home.html',
@@ -64,6 +60,12 @@ def login():
 @app.route('/assets')
 @login_required  # require login
 def assets():
+    """Display all assets to admin user
+
+    Returns:
+    staff -- an array of staff full names
+    assets -- collection of all assets in database
+    """
     all_assets = Asset.query.all()
     staff = []
     for asset in all_assets:
@@ -79,7 +81,6 @@ def assets():
 @login_required  # require login
 def assign_asset():
     """Assign asset to a staff"""
-    error = None
     if request.method == 'POST':
         asset_object = Asset.query.filter_by(name=request.form['asset']) \
                         .first()
@@ -88,14 +89,12 @@ def assign_asset():
                         .first()
         asset_object.author = staff_object
         db.session.commit()
-
-    return redirect(url_for('assets'))
+        return redirect(url_for('assets'))
 
 @app.route('/reclaim_asset', methods=['GET', 'POST'])
 @login_required  # require login
 def reclaim_asset():
     """Reclaim asset from a staff and return to storage"""
-    error = None
     if request.method == 'POST':
         asset_object = Asset.query.filter_by(name=request.form['asset']) \
                         .first()
@@ -179,9 +178,9 @@ def report_found():
                                 serialno=asset_object.serialno, 
                                 assetno=asset_object.assetno)
         db.session.add(new_found)
-        db.seesion.commit()
+        db.sesion.commit()
 
-        return redirect(url_for('home'))
+        return redirect(url_for('login'))
 
 @app.route('/report_missing', methods=['GET', 'POST'])
 @login_required  # require login
@@ -193,13 +192,13 @@ def report_missing():
     if request.method == 'POST':
         asset_object = Asset.query.filter_by(id=request.form['id']). \
                         first()
-        new_missing = FoundReport(name=asset_object.name, 
-                                serialno=asset_object.serialno, 
-                                assetno=asset_object.assetno)
+        new_missing = MissingReport(name=asset_object.name, 
+                                    serialno=asset_object.serialno, 
+                                    assetno=asset_object.assetno)
         db.session.add(new_missing)
-        db.seesion.commit()
+        db.session.commit()
 
-        return redirect(url_for('home'))
+        return redirect(url_for('login'))
 
 @app.route('/staff')
 @login_required  # require login

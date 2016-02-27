@@ -46,7 +46,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">Inventory Manager</a>
+                <a class="navbar-brand" href="home.html">Inventory Manager</a>
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
@@ -208,7 +208,7 @@
                                                             <div class="modal-content">
                                                               <div class="modal-header">
                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                                <h4 class="modal-title" id="myModalLabel">Report Form</h4>
+                                                                <h4 class="modal-title" id="myModalLabel">Assign Form</h4>
                                                               </div>
                                                               <div class="modal-body">
                                                                 <div class="form-bottom">
@@ -220,7 +220,7 @@
                                                                         <div class="form-group">
                                                                             <select name="staff" >
                                                                                 {% for astaff in staff %}
-                                                                                <option value="astaff">astaff</option>
+                                                                                <option value="{{ astaff }}">{{ astaff }}</option>
                                                                                 {% endfor %}
                                                                             </select>
                                                                         </div>
@@ -256,13 +256,6 @@
                                                                         <div class="form-group">
                                                                             <label class="sr-only" for="form-username">Name</label>
                                                                             <input type="text" name="name" value="{{ asset.name }}" class="form-username form-control" id="form-username">
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <select name="staff" >
-                                                                                {% for astaff in staff %}
-                                                                                <option value="astaff">astaff</option>
-                                                                                {% endfor %}
-                                                                            </select>
                                                                         </div>
                                                                         <button type="submit" class="btn">Assign</button>
                                                                     </form>

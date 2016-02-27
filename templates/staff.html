@@ -113,7 +113,7 @@
                         <a href="bootstrap-elements.html"><i class="fa fa-fw fa-desktop"></i> Reports</a>
                     </li>
                     {% endif %}
-                    {% if staff.role == "user" %}
+                    {% if session['role'] == "super-admin" %}
                         <li class="active">
                             <a href="#"><i class="fa fa-fw fa-table"></i> Staff</a>
                         </li>

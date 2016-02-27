@@ -118,27 +118,7 @@
                             <a href="/staff"><i class="fa fa-fw fa-table"></i> Staff</a>
                         </li>
                     {% endif %}
-<!--                     <li>
-                        <a href="bootstrap-grid.html"><i class="fa fa-fw fa-wrench"></i> Bootstrap Grid</a>
-                    </li>
-                    <li>
-                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-arrows-v"></i> Dropdown <i class="fa fa-fw fa-caret-down"></i></a>
-                        <ul id="demo" class="collapse">
-                            <li>
-                                <a href="#">Dropdown Item</a>
-                            </li>
-                            <li>
-                                <a href="#">Dropdown Item</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="blank-page.html"><i class="fa fa-fw fa-file"></i> Blank Page</a>
-                    </li>
-                    <li>
-                        <a href="index-rtl.html"><i class="fa fa-fw fa-dashboard"></i> RTL Dashboard</a>
-                    </li>
- -->                </ul>
+                </ul>
             </div>
             <!-- /.navbar-collapse -->
         </nav>
@@ -212,7 +192,7 @@
                                                                     <div class="form-bottom">
                                                                         <form role="form" action="/report_found" method="post" class="login-form">
                                                                             <div class="form-group">
-                                                                                <label class="sr-only" for="form-username">Name</label>
+                                                                                <label class="sr-only" for="form-username">{{ asset.name }}</label>
                                                                                 <input type="text" name="name" value="{{ asset.name }}" class="form-username form-control" id="form-username">
                                                                             </div>
                                                                             <div class="form-group">
@@ -251,7 +231,7 @@
                                                                         <form role="form" action="/report_missing" method="post" class="login-form">
                                                                             <div class="form-group">
                                                                                 <label class="sr-only" for="form-username">Name</label>
-                                                                                <input type="text" name="name" value="{{ asset.name }}"" class="form-username form-control" id="form-username">"
+                                                                                <input type="text" name="name" value="{{ asset.name }}" class="form-username form-control" id="form-username">"
                                                                             </div>
                                                                             <div class="form-group">
                                                                                 <label class="sr-only" for="form-password">Asset ID</label>
